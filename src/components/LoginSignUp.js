@@ -100,9 +100,9 @@ class LoginSignup extends React.Component {
                         onChange={this.handleInputChange}
                    >
                         <option value="" />
-                        <option value={1}>A</option>
-                        <option value={2}>B</option>
-                        <option value={3}>C</option>
+                        <option value={11}>A</option>
+                        <option value={21}>B</option>
+                        <option value={31}>C</option>
                   </Select>
 
               <TextField
