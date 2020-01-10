@@ -1,186 +1,176 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Step from "./Step";
+import { withStyles } from "@material-ui/core";
+
+const styles = theme => ({
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
+      marginTop: theme.spacing(1.5)
+    }
+  },
+  title: {
+    padding: `${theme.spacing(1.25)}px 0px`
+  },
+  button: {
+    textTransform: "none"
+  }
+});
 
 class AddProcess extends React.Component {
-    state={
-        pUniqueName: '',
-        title: '',
-        description: '',
-        steps: [{
-            sequence_no: 0,
-            title: "",
-            duration: "",
-            division: "",
-            task: ""
-        }]
-    }
-
-    addStep = () => {
-        this.setState((prevState) => ({
-            steps: [...prevState.steps, {
-                sequence_no: 0,
-                title: "",
-                duration: "",
-                division: "",
-                task: ""
-            }]
-        }))
-    }
-
-    handleInputChange = (e) => {
-      console.log(e.target.value);
-      this.setState({
-        [e.target.name]: e.target.value
-      })
-    }
-
-    handleSubmit = (e) => {
-      e.preventDefault();
-      const { pUniqueName, title, description, steps } = this.state;
-
-      const process = {
-        pUniqueName,
-        title,
-        description,
-        steps
+  state = {
+    pUniqueName: "",
+    title: "",
+    description: "",
+    steps: [
+      {
+        title: "",
+        duration: "",
+        division: "",
+        task: ""
       }
-      console.log(process)
-    }
-    render() {
-        return (
-            <Container component="main" maxWidth="md">
-              <CssBaseline />
-              <div>
-                
-                <Typography component="h1" variant="h5">
-                  Create Process
-                </Typography>
-                <form noValidate onSubmit={this.handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="pUniqueName"
-                        label="Unique Name"
-                        name="pUniqueName"
-                        autoFocus
-                        onChange={this.handleInputChange}
-                    />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="title"
-                    label="Title"
-                    name="title"
-                    onChange={this.handleInputChange}
-                  />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    multiline
-                    rowsMax="5"
-                    required
-                    fullWidth
-                    name="description"
-                    label="Description"
-                    id="description" 
-                    onChange={this.handleInputChange}
-                  />
-                  
-                  {
-                      this.state.steps.map((value, index) => {
-                          let sequence_no = `${index+1}`, titleId = `title${index+1}`, durationId = `duration${index+1}`, divisionId = `division${index+1}`, taskId = `task${index+1}`;
-                          return (
-                              <div key={index}>
-                              <Typography component="h1" variant="h6">
-                                Step {index+1}
-                             </Typography>
-                            <TextField
-                    variant="standard"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="title"
-                    label="Title"
-                    id={titleId} 
-                    onChange={this.handleInputChange}
-                  />
-                  <TextField
-                    variant="standard"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name={durationId}
-                    label="Duration(in days)"
-                    type="number"
-                    id={durationId}
-                    onChange={this.handleInputChange}
-                  />
-                  <InputLabel htmlFor={divisionId}>Division</InputLabel>
-                  <Select
-                  margin="normal"
-                  required
+    ]
+  };
+
+  addStep = () => {
+    this.setState(prevState => ({
+      steps: [
+        ...prevState.steps,
+        {
+          title: "",
+          duration: "",
+          division: "",
+          task: ""
+        }
+      ]
+    }));
+  };
+
+  removeStep = idx => () => {
+    this.setState(prevState => ({
+      steps: prevState.steps.filter((_, index) => index !== idx)
+    }));
+  };
+
+  handleInputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  handelStepInputChange = index => e => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    this.setState(prevState => ({
+      steps: prevState.steps.map((step, idx) =>
+        idx === index ? { ...step, [name]: value } : step
+      )
+    }));
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { pUniqueName, title, description, steps } = this.state;
+
+    const process = {
+      pUniqueName,
+      title,
+      description,
+      steps
+    };
+    console.log(process);
+  };
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <Container component="main" maxWidth="md">
+        <CssBaseline />
+        <div>
+          <Typography component="h1" variant="h5" className={classes.title}>
+            Create Process
+          </Typography>
+          <form onSubmit={this.handleSubmit} className={classes.form}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              size="small"
+              id="pUniqueName"
+              label="Unique Name"
+              name="pUniqueName"
+              value={this.state.pUniqueName}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              size="small"
+              id="title"
+              label="Title"
+              name="title"
+              value={this.state.title}
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              variant="outlined"
+              multiline
+              rowsMax="5"
+              required
+              fullWidth
+              size="small"
+              name="description"
+              label="Description"
+              id="description"
+              value={this.state.description}
+              onChange={this.handleInputChange}
+            />
+            {this.state.steps.map((step, idx) => (
+              <Step
+                step={step}
+                index={idx}
+                key={idx}
+                handleInputChange={this.handelStepInputChange(idx)}
+                removeStep={this.removeStep(idx)}
+              />
+            ))}
+            <Grid container spacing={4} direction="row" justify="center">
+              <Grid item md={3}>
+                <Button
+                  variant="contained"
+                  color="secondary"
                   fullWidth
-                        native
-                        value={this.state.steps.division}
-                        id={divisionId}
-                        name={divisionId}
-                        onChange={this.handleInputChange}
-                   >
-                        <option value="" />
-                        <option value={1}>A</option>
-                        <option value={2}>B</option>
-                        <option value={3}>C</option>
-                  </Select>
-                  
-                  <TextField
-                    variant="standard"
-                    margin="normal"
-                    multiline
-                    rowsMax="5"
-                    required
-                    fullWidth
-                    name={taskId}
-                    label="Task"
-                    id={taskId} 
-                    onChange={this.handleInputChange}
-                  />
-                              </div>
-                          )
-                      })
-                  }
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.addStep}
-                  >
-                    Add Step
-                  </Button>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
- 
-                  >
-                    Create
-                  </Button>
-                </form>
-              </div>
-              
-            </Container>
-          );
-    }
+                  onClick={this.addStep}
+                  className={classes.button}
+                >
+                  Add Step
+                </Button>
+              </Grid>
+              <Grid item md={3}>
+                <Button
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                >
+                  Create Process
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+    );
+  }
 }
 
-  
-export default AddProcess;
+export default withStyles(styles)(AddProcess);
