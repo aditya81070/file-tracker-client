@@ -11,6 +11,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 
 import SignIn from './LoginPage';
+import axios from 'axios';
+
 class LoginSignup extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +22,8 @@ class LoginSignup extends React.Component {
       designation: '',
       division: '',
       tel: '',
-      email: ''
+      email: '',
+      password: ''
     }
   }
 
@@ -33,17 +36,20 @@ class LoginSignup extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { name, designation, division, tel, email } = this.state;
+    const { name, designation, division, tel, email, password } = this.state;
 
     const user = {
       name,
       designation,
       division,
       tel,
-      email
+      email,
+      password
     }
-
-    console.log(user);
+    axios.post(`https://13.233.200.7:3443/users/signup`, user).then((res) => {
+      console.log(res.data);
+    })
+    
   }
   render() {
     return (
@@ -100,9 +106,9 @@ class LoginSignup extends React.Component {
                         onChange={this.handleInputChange}
                    >
                         <option value="" />
-                        <option value={11}>A</option>
-                        <option value={21}>B</option>
-                        <option value={31}>C</option>
+                        <option value={1}>A</option>
+                        <option value={2}>B</option>
+                        <option value={3}>C</option>
                   </Select>
 
               <TextField
@@ -128,7 +134,17 @@ class LoginSignup extends React.Component {
                 autoComplete="email"
                 onChange={this.handleInputChange}
               />
+              <TextField
+              variant="outlined"
               
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              onChange={this.handleInputChange}
+            />
               <Button
                 type="submit"
                 fullWidth
