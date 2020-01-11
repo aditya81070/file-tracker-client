@@ -2,8 +2,31 @@ import React from 'react';
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import Container from '@material-ui/core/Container';
+import { withStyles } from "@material-ui/core";
+import { tableIcons } from './TableIcons';
 
-export default class EmployeeList extends React.Component{
+
+const styles = theme => ({
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
+      marginTop: theme.spacing(1.5)
+    },
+    textAlign: "center"
+  },
+  title: {
+    padding: `${theme.spacing(1.25)}px 0px`
+  },
+  button: {
+    textTransform: "none",
+    width: '20%',
+    margin: '10px auto'
+  }
+});
+
+class EmployeeList extends React.Component{
   constructor(props) {
     super(props);
 
@@ -14,21 +37,29 @@ export default class EmployeeList extends React.Component{
   }
 
   handleChecked = (e) => {
-    let userId = '';
-    if(e.target.checked && e.target.value) {
+    let userId;
+    if(e.target.checked) {
       userId = e.target.value
+    } else {
+      const index = this.state.verifyUsers.indexOf(e.target.value);
+      if(index>-1) {
+        this.state.verifyUsers.splice(index, 1);
+      }  
     }
-    console.log(userId);
-    this.setState((prevState) => ({ 
-      verifyUsers: [...prevState.verifyUsers, userId]
-    }))
+
+    if(typeof userId === 'undefined') {} 
+    else {
+      this.setState((prevState) => ({ 
+        verifyUsers: [...prevState.verifyUsers, userId]
+      }))
+    }  
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     const userIds = this.state.verifyUsers;
-    console.log(userIds.length);
-    if(userIds.length == 1) {
+    
+    if(userIds.length === 1) {
       axios.post(`https://13.233.200.7:3443/employee/verify/${userIds[0]}`)
       .then((res) => {
         console.log(res.data);
@@ -43,7 +74,7 @@ export default class EmployeeList extends React.Component{
 
   componentDidMount() {
     axios.get(`https://13.233.200.7:3443/employee/verify`, 
-    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg1OTcxMjIsImV4cCI6MTU3ODYwMDcyMn0.vUJtbtCcEfmNxz-VJi3y8cKJV-IG1ZFiSri7dRtmGW0"}})
+    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3Mzc5OTYsImV4cCI6MTU3ODc0MTU5Nn0.hbMEnQfzfO77se8XnrQWTrBie-fC-yYB_VBleUq0Uiw"}})
     .then((res) => {
       console.log(res.data)
       this.setState({
@@ -52,6 +83,7 @@ export default class EmployeeList extends React.Component{
     })
   }
   render() {
+    const { classes } = this.props;
     const data = [];
     this.state.response.map((res) => {
       data.push({id: res._id,
@@ -64,9 +96,11 @@ export default class EmployeeList extends React.Component{
       })
     })
     return (
-      <form onSubmit={this.handleSubmit}>
+      <Container component="main" maxWidth="md">
+      <form onSubmit={this.handleSubmit} className={classes.form}>
       <MaterialTable
-        title="Editable Example"
+      icons={tableIcons}
+        title="Employee List"
         columns={[
           { title: 'Name', field: 'name' },
           { title: 'Designation', field: 'designation' ,
@@ -88,12 +122,14 @@ export default class EmployeeList extends React.Component{
               fullWidth
               variant="contained"
               color="primary" 
+              className={classes.button}
             >
               Verify
             </Button>
       </form>
-
+      </Container>
     );
   }
 }
 
+export default withStyles(styles)(EmployeeList);
