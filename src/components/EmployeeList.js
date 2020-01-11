@@ -1,30 +1,11 @@
 import React from 'react';
 import MaterialTable from 'material-table';
-import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import { withStyles } from "@material-ui/core";
 import { tableIcons } from './TableIcons';
-
-
-const styles = theme => ({
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    "& > *": {
-      marginTop: theme.spacing(1.5)
-    },
-    textAlign: "center"
-  },
-  title: {
-    padding: `${theme.spacing(1.25)}px 0px`
-  },
-  button: {
-    textTransform: "none",
-    width: '20%',
-    margin: '10px auto'
-  }
-});
 
 class EmployeeList extends React.Component{
   constructor(props) {
@@ -32,49 +13,33 @@ class EmployeeList extends React.Component{
 
     this.state = {
       response: [],
-      verifyUsers: []
+      empId: ''
     }
   }
-
-  handleChecked = (e) => {
-    let userId;
-    if(e.target.checked) {
-      userId = e.target.value
-    } else {
-      const index = this.state.verifyUsers.indexOf(e.target.value);
-      if(index>-1) {
-        this.state.verifyUsers.splice(index, 1);
-      }  
-    }
-
-    if(typeof userId === 'undefined') {} 
-    else {
-      this.setState((prevState) => ({ 
-        verifyUsers: [...prevState.verifyUsers, userId]
-      }))
-    }  
+  handleInputChange = e => {
+    let empId = e.target.value;
+    this.setState({
+      empId: empId
+    })
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
-    const userIds = this.state.verifyUsers;
-    
-    if(userIds.length === 1) {
-      axios.post(`https://13.233.200.7:3443/employee/verify/${userIds[0]}`)
-      .then((res) => {
-        console.log(res.data);
+    const empId = this.state.empId;
+    axios.get(`https://13.233.200.7:3443/employees/${empId}`, 
+    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3NjM0NTgsImV4cCI6MTU3ODc2NzA1OH0.iyNgEg7J3RMy6wVexiLVhzWJLiRuAbQUPW7ltGgTBxQ"}})
+    .then((res) => {
+      const data = [res.data];
+      console.log(data);
+      this.setState({
+        response: data
       })
-    } else {
-      axios.post(`https://13.233.200.7:3443/employee/verify`, userIds)
-      .then((res) => {
-        console.log(res.data);
-      })
-    }
+    })
   }
 
   componentDidMount() {
-    axios.get(`https://13.233.200.7:3443/employee/verify`, 
-    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3Mzc5OTYsImV4cCI6MTU3ODc0MTU5Nn0.hbMEnQfzfO77se8XnrQWTrBie-fC-yYB_VBleUq0Uiw"}})
+    axios.get(`https://13.233.200.7:3443/employees`, 
+    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3NjM0NTgsImV4cCI6MTU3ODc2NzA1OH0.iyNgEg7J3RMy6wVexiLVhzWJLiRuAbQUPW7ltGgTBxQ"}})
     .then((res) => {
       console.log(res.data)
       this.setState({
@@ -83,7 +48,6 @@ class EmployeeList extends React.Component{
     })
   }
   render() {
-    const { classes } = this.props;
     const data = [];
     this.state.response.map((res) => {
       data.push({id: res._id,
@@ -92,16 +56,44 @@ class EmployeeList extends React.Component{
          division: res.division,
          contact:res.contact,
          email: res.email,
-         verify: res.isVerified
+         role: res.role
       })
     })
     return (
       <Container component="main" maxWidth="md">
-      <form onSubmit={this.handleSubmit} className={classes.form}>
+      <div>
+                    <Typography component="h1" variant="h5">
+                        Search Employee
+                    </Typography>
+                    <form  noValidate onSubmit={this.handleSubmit}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="empId"
+                        label="Enter Employee Id"
+                        type="empId"
+                        name="empId"
+                        autoFocus
+                        onChange={this.handleInputChange}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        >
+                        Search
+                    </Button>
+                    </form>
+      </div>
+      <div>
       <MaterialTable
       icons={tableIcons}
         title="Employee List"
         columns={[
+          { title: 'EmpID', field: 'id' },
           { title: 'Name', field: 'name' },
           { title: 'Designation', field: 'designation' ,
           lookup: { 34: 'İstanbul', a: 'Şanlıurfa' }
@@ -113,23 +105,14 @@ class EmployeeList extends React.Component{
         },
           { title: 'Contact', field: 'contact', type: 'numeric' },
           { title: 'Email', field: 'email'},
-          { title: 'Verify', field: 'checkbox', render: rowData => <input type="checkbox" onChange={this.handleChecked} value={rowData.id}/>},
+          { title: 'Role', field: 'role' },
         ]}
         data={data}
       />
-      <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary" 
-              className={classes.button}
-            >
-              Verify
-            </Button>
-      </form>
+      </div>
       </Container>
     );
   }
 }
 
-export default withStyles(styles)(EmployeeList);
+export default EmployeeList;
