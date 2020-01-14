@@ -3,8 +3,7 @@ import QRCode from 'qrcode.react';
 import AddFile from './AddFile';
 
 const downloadQR = () => {
-    let canvas = document.getElementById("files").value;
-    canvas = canvas.replace(/\s+/g, '');
+    let canvas = document.getElementById("files");
     const pngUrl = canvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");

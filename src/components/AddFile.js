@@ -18,6 +18,7 @@ export default ({ handleInputChange, handleSubmit, post}) => {
             <form onSubmit={handleSubmit}>
               <TextField
                 variant="outlined"
+                margin="normal"
                 required
                 fullWidth
                 size="small"
