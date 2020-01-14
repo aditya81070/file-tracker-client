@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 
+const url = process.env.REACT_APP_BASE_URL;
+
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -32,18 +34,16 @@ class SignIn extends React.Component {
       password
     }
 
-    const config = {
-      headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg1Njk3OTMsImV4cCI6MTU3ODU3MzM5M30.S82KYl251otfXcRB7naTBCSaGIh1oDPIVbvGwy7PvyA"}
-    }
-
-    axios.post(`https://13.233.200.7:3443/users/login`, login, config).then((res) => {
-      console.log(res.data)
+    axios.post(`${url}/users/login`, login).then((res) => {
+      const token = res.data.token;
+      window.localStorage.setItem('token', token);
+      console.log(token)
     })
   }
 
   render() {
     return (
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <div>
           
@@ -53,7 +53,7 @@ class SignIn extends React.Component {
           <form  noValidate onSubmit={this.handleSubmit}>
             <TextField
               variant="outlined"
-              
+              margin="normal"
               required
               fullWidth
               id="email"
@@ -66,7 +66,7 @@ class SignIn extends React.Component {
             />
             <TextField
               variant="outlined"
-              
+              margin="normal"
               required
               fullWidth
               name="password"

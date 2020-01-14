@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import { tableIcons } from './TableIcons';
 
+const url = process.env.REACT_APP_BASE_URL;
+
 class EmployeeList extends React.Component{
   constructor(props) {
     super(props);
@@ -26,8 +28,9 @@ class EmployeeList extends React.Component{
   handleSubmit = e => {
     e.preventDefault();
     const empId = this.state.empId;
-    axios.get(`https://13.233.200.7:3443/employees/${empId}`, 
-    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3NjM0NTgsImV4cCI6MTU3ODc2NzA1OH0.iyNgEg7J3RMy6wVexiLVhzWJLiRuAbQUPW7ltGgTBxQ"}})
+    const token = window.localStorage.getItem('token');
+    axios.get(`${url}/employees/${empId}`, 
+    {headers: {'Authorization': `bearer ${token}`}})
     .then((res) => {
       const data = [res.data];
       console.log(data);
@@ -38,8 +41,9 @@ class EmployeeList extends React.Component{
   }
 
   componentDidMount() {
-    axios.get(`https://13.233.200.7:3443/employees`, 
-    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3NjM0NTgsImV4cCI6MTU3ODc2NzA1OH0.iyNgEg7J3RMy6wVexiLVhzWJLiRuAbQUPW7ltGgTBxQ"}})
+    const token = window.localStorage.getItem('token');
+    axios.get(`${url}/employees`, 
+    {headers: {'Authorization': `bearer ${token}`}})
     .then((res) => {
       console.log(res.data)
       this.setState({

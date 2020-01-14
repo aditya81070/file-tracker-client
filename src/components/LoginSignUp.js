@@ -12,6 +12,34 @@ import Select from '@material-ui/core/Select';
 
 import SignIn from './LoginPage';
 import axios from 'axios';
+import { withStyles } from "@material-ui/core";
+
+const url = process.env.REACT_APP_BASE_URL;
+const styles = theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
+      marginTop: theme.spacing(1.5)
+    }
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
+  },
+  title: {
+    padding: `${theme.spacing(1.25)}px 0px`
+  },
+  button: {
+    textTransform: "none"
+  }
+});
 
 class LoginSignup extends React.Component {
   constructor(props) {
@@ -46,28 +74,30 @@ class LoginSignup extends React.Component {
       email,
       password
     }
-    axios.post(`https://13.233.200.7:3443/users/signup`, user).then((res) => {
+    axios.post(`${url}/users/signup`, user).then((res) => {
       console.log(res.data);
     })
     
   }
   render() {
+    const { classes } = this.props;
     return (
-      <Container component="main" maxWidth="xl">
+      <Container component="main" maxWidth="lg">
         <CssBaseline />
-        <div >
-          <Avatar>
-            <LockOutlinedIcon />
-          </Avatar>
+        <div className={classes.paper}>
+          
           
             <Grid container>
-              <Grid item>
+              <Grid item sm>
+              <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
               <Typography component="h1" variant="h5">
               Sign Up
             </Typography>
-            <form noValidate onSubmit={this.handleSubmit}>
+            <form noValidate onSubmit={this.handleSubmit} className={classes.form}>
               <TextField
-                variant="standard"
+              variant="outlined"
                 margin="normal"
                 required
                 fullWidth
@@ -80,6 +110,7 @@ class LoginSignup extends React.Component {
               />
               <InputLabel htmlFor="designation">Designation</InputLabel>
                   <Select
+                  variant="outlined"
                   margin="normal"
                   required
                   fullWidth
@@ -97,6 +128,7 @@ class LoginSignup extends React.Component {
 
                   <InputLabel htmlFor="division">Division</InputLabel>
                   <Select
+                  variant="outlined"
                   margin="normal"
                   required
                   fullWidth
@@ -136,7 +168,7 @@ class LoginSignup extends React.Component {
               />
               <TextField
               variant="outlined"
-              
+              margin="normal"
               required
               fullWidth
               name="password"
@@ -157,7 +189,10 @@ class LoginSignup extends React.Component {
               </form>
               </Grid>
               <Grid item>
-              <SignIn/>
+                <Avatar className={classes.avatar}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <SignIn />
               </Grid>
             </Grid>
           
@@ -167,4 +202,4 @@ class LoginSignup extends React.Component {
   }
 }
   
-export default LoginSignup;
+export default withStyles(styles)(LoginSignup);

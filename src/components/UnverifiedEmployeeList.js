@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from "@material-ui/core";
 import { tableIcons } from './TableIcons';
 
+const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
@@ -60,12 +61,12 @@ class UnverifiedEmployeeList extends React.Component{
     const userIds = this.state.verifyUsers;
     
     if(userIds.length === 1) {
-      axios.post(`https://13.233.200.7:3443/employee/verify/${userIds[0]}`)
+      axios.post(`${url}/employee/verify/${userIds[0]}`)
       .then((res) => {
         console.log(res.data);
       })
     } else {
-      axios.post(`https://13.233.200.7:3443/employee/verify`, userIds)
+      axios.post(`${url}/employee/verify`, userIds)
       .then((res) => {
         console.log(res.data);
       })
@@ -73,8 +74,9 @@ class UnverifiedEmployeeList extends React.Component{
   }
 
   componentDidMount() {
-    axios.get(`https://13.233.200.7:3443/employee/verify`, 
-    {headers: {'Authorization': "bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTE2Yzc4ZjJlMGMxMjUwOWI1OTdhYzciLCJpYXQiOjE1Nzg3Mzc5OTYsImV4cCI6MTU3ODc0MTU5Nn0.hbMEnQfzfO77se8XnrQWTrBie-fC-yYB_VBleUq0Uiw"}})
+    const token = window.localStorage.getItem('token');
+    axios.get(`${url}/employee/verify`, 
+    {headers: {'Authorization': `bearer ${token}`}})
     .then((res) => {
       console.log(res.data)
       this.setState({
