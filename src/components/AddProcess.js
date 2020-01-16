@@ -5,8 +5,12 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Step from "./Step";
 import { withStyles } from "@material-ui/core";
+import axios from 'axios';
+
+import Step from "./Step";
+
+const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
@@ -77,6 +81,7 @@ class AddProcess extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const token = window.localStorage.getItem('token');
     const { pUniqueName, title, description, steps } = this.state;
 
     const process = {
@@ -86,6 +91,9 @@ class AddProcess extends React.Component {
       steps
     };
     console.log(process);
+    axios.post(`${url}`, token, process).then((res) => {
+      console.log(res);
+    })
   };
 
   render() {

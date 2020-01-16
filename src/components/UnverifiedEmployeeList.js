@@ -59,14 +59,16 @@ class UnverifiedEmployeeList extends React.Component{
   handleSubmit = (e) => {
     e.preventDefault();
     const userIds = this.state.verifyUsers;
-    
+    const token = window.localStorage.getItem('token');
+console.log(token)
     if(userIds.length === 1) {
-      axios.post(`${url}/employee/verify/${userIds[0]}`)
+      axios.post(`${url}/employee/verify/${userIds[0]}`, ' ',
+      {headers: {'Authorization': `bearer ${token}`}})
       .then((res) => {
         console.log(res.data);
       })
     } else {
-      axios.post(`${url}/employee/verify`, userIds)
+      axios.post(`${url}/employee/verify`, userIds, {headers: {'Authorization': `bearer ${token}`}})
       .then((res) => {
         console.log(res.data);
       })

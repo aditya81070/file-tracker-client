@@ -14,31 +14,10 @@ class EmployeeList extends React.Component{
     super(props);
 
     this.state = {
-      response: [],
-      empId: ''
+      response: []
     }
   }
-  handleInputChange = e => {
-    let empId = e.target.value;
-    this.setState({
-      empId: empId
-    })
-  }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const empId = this.state.empId;
-    const token = window.localStorage.getItem('token');
-    axios.get(`${url}/employees/${empId}`, 
-    {headers: {'Authorization': `bearer ${token}`}})
-    .then((res) => {
-      const data = [res.data];
-      console.log(data);
-      this.setState({
-        response: data
-      })
-    })
-  }
+  
 
   componentDidMount() {
     const token = window.localStorage.getItem('token');
@@ -54,7 +33,7 @@ class EmployeeList extends React.Component{
   render() {
     const data = [];
     this.state.response.map((res) => {
-      data.push({id: res._id,
+      data.push({
         name: res.name,
          designation: res.designation,
          division: res.division,
@@ -65,39 +44,13 @@ class EmployeeList extends React.Component{
     })
     return (
       <Container component="main" maxWidth="md">
-      <div>
-                    <Typography component="h1" variant="h5">
-                        Search Employee
-                    </Typography>
-                    <form  noValidate onSubmit={this.handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="empId"
-                        label="Enter Employee Id"
-                        type="empId"
-                        name="empId"
-                        autoFocus
-                        onChange={this.handleInputChange}
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        >
-                        Search
-                    </Button>
-                    </form>
-      </div>
+      
       <div>
       <MaterialTable
       icons={tableIcons}
         title="Employee List"
         columns={[
-          { title: 'EmpID', field: 'id' },
+         
           { title: 'Name', field: 'name' },
           { title: 'Designation', field: 'designation' ,
           lookup: { 34: 'İstanbul', a: 'Şanlıurfa' }

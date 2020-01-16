@@ -45,7 +45,9 @@ class FileList extends React.Component{
               Link
             </Link>
           },
-          { title: 'Status', field: 'status' },
+          { title: 'Status', field: 'status' ,
+          lookup: { 34: 'Done', a: 'Pending' }
+        }
         ]}
         
       />

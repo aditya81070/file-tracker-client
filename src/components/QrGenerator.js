@@ -2,6 +2,17 @@ import React from 'react';
 import QRCode from 'qrcode.react';
 import AddFile from './AddFile';
 
+import { withStyles } from "@material-ui/core";
+
+const styles = theme => ({
+    qr: {
+        textAlign: 'center'
+    },
+    a: {
+        cursor: 'pointer'
+    }
+});
+
 const downloadQR = () => {
     let canvas = document.getElementById("files");
     const pngUrl = canvas
@@ -42,6 +53,7 @@ class QrGenerator extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (  
             <div>
             <AddFile
@@ -51,14 +63,14 @@ class QrGenerator extends React.Component {
             />
 
             { this.state.isSubmitted === 1? (
-                <div>
+                <div className={classes.qr}>
                     <QRCode 
                     id="files"
                     value={this.state.fileName}
                     size={290}
                     level={"H"}
-                    includeMargin={true} />
-                    <a onClick={downloadQR}>Click here to Download</a>
+                    includeMargin={true} /><br />
+                    <a onClick={downloadQR} className={classes.a}>Click here to Download</a>
                 </div>
             )
             : 
@@ -73,4 +85,4 @@ class QrGenerator extends React.Component {
     }
 }
 
-export default QrGenerator;
+export default withStyles(styles)(QrGenerator);
