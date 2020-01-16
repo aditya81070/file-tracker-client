@@ -1,33 +1,34 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Typography,
+  Container
+} from '@material-ui/core';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
 const url = process.env.REACT_APP_BASE_URL;
 
-class SignIn extends React.Component {
+class LogIn extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: '',
       password: '',
       redirect: false,
       redirectPath: ''
-    }
+    };
   }
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
 
     const { email, password } = this.state;
@@ -35,29 +36,34 @@ class SignIn extends React.Component {
     const login = {
       email,
       password
-    }
+    };
+    console.log(login);
 
-    axios.post(`${url}/users/login`, login).then((res) => {
+    axios.post(`${url}/users/login`, login).then(res => {
+      console.log(res);
       const token = res.data.token;
       const role = res.data.role;
       window.localStorage.setItem('token', token);
-      if(role === 'admin') {
-        this.setState({ redirect: true, redirectPath: '/admin-dashboard'})
+      if (role === 'admin') {
+        this.setState({ redirect: true, redirectPath: '/admin' });
+      } else if (role === 'emp') {
+        this.setState({ redirect: true, redirectPath: '/emp' });
+      } else if (role === 'qrg') {
+        this.setState({ redirect: true, redirectPath: '/qrg' });
       }
-    })
-  }
+    });
+  };
 
   render() {
-    if(! this.state.redirect) {
+    if (!this.state.redirect) {
       return (
         <Container component="main" maxWidth="sm">
           <CssBaseline />
           <div>
-            
             <Typography component="h1" variant="h5">
-              Sign in
+              Log In
             </Typography>
-            <form  noValidate onSubmit={this.handleSubmit}>
+            <form noValidate onSubmit={this.handleSubmit}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -88,19 +94,17 @@ class SignIn extends React.Component {
                 fullWidth
                 variant="contained"
                 color="primary"
-                
               >
-                Sign In
+                Log In
               </Button>
             </form>
           </div>
-          
         </Container>
       );
     } else {
-      return <Redirect push to={this.state.redirectPath} />
+      return <Redirect push to={this.state.redirectPath} />;
     }
   }
 }
 
-export default SignIn;
+export default LogIn;

@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
-import QrReader from 'react-qr-reader'
- 
-export default class Qr extends Component {
+import React, { Component } from 'react';
+import QrReader from 'react-qr-reader';
+
+export default class QrScanner extends Component {
   state = {
     result: 'No result'
-  }
- 
+  };
+
   handleScan = data => {
     if (data) {
-      console.log(data)
+      console.log(data);
       this.setState({
         result: data
-      })
+      });
     }
-  }
+  };
   handleError = err => {
-    console.error(err)
-  }
+    console.error(err);
+  };
   render() {
     return (
       <div>
@@ -27,6 +27,6 @@ export default class Qr extends Component {
         />
         <p>{this.state.result}</p>
       </div>
-    )
+    );
   }
 }

@@ -1,20 +1,22 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Delete from "@material-ui/icons/Delete";
-import { withStyles } from "@material-ui/core";
+import React from 'react';
+import {
+  TextField,
+  Typography,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  Button,
+  withStyles
+} from '@material-ui/core';
+import Delete from '@material-ui/icons/Delete';
 
 const styles = theme => ({
   title: {
     padding: theme.spacing(1)
   },
   button: {
-    textTransform: "none"
+    textTransform: 'none'
   }
 });
 

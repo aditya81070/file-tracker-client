@@ -1,22 +1,24 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core";
+import React from 'react';
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Typography,
+  Container,
+  Grid,
+  withStyles
+} from '@material-ui/core';
 import axios from 'axios';
 
-import Step from "./Step";
+import Step from './Step';
 
 const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
-    display: "flex",
-    flexDirection: "column",
-    "& > *": {
+    display: 'flex',
+    flexDirection: 'column',
+    '& > *': {
       marginTop: theme.spacing(1.5)
     }
   },
@@ -24,21 +26,21 @@ const styles = theme => ({
     padding: `${theme.spacing(1.25)}px 0px`
   },
   button: {
-    textTransform: "none"
+    textTransform: 'none'
   }
 });
 
 class AddProcess extends React.Component {
   state = {
-    pUniqueName: "",
-    title: "",
-    description: "",
+    pUniqueName: '',
+    title: '',
+    description: '',
     steps: [
       {
-        title: "",
-        duration: "",
-        division: "",
-        task: ""
+        title: '',
+        duration: '',
+        division: '',
+        task: ''
       }
     ]
   };
@@ -48,10 +50,10 @@ class AddProcess extends React.Component {
       steps: [
         ...prevState.steps,
         {
-          title: "",
-          duration: "",
-          division: "",
-          task: ""
+          title: '',
+          duration: '',
+          division: '',
+          task: ''
         }
       ]
     }));
@@ -91,9 +93,9 @@ class AddProcess extends React.Component {
       steps
     };
     console.log(process);
-    axios.post(`${url}`, token, process).then((res) => {
+    axios.post(`${url}`, token, process).then(res => {
       console.log(res);
-    })
+    });
   };
 
   render() {
