@@ -2,6 +2,10 @@ import React from 'react';
 import MaterialTable from 'material-table';
 import { Container, Link, withStyles } from '@material-ui/core';
 import { tableIcons } from '../../components/TableIcons';
+import axios from 'axios';
+import EmpWrapper from '../../components/wrapper/EmpWrapper';
+
+const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
@@ -23,10 +27,29 @@ const styles = theme => ({
 });
 
 class FileList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state={
+      response: []
+    }
+  }
+  componentDidMount() {
+    const token = window.localStorage.getItem('token');
+
+    axios.get(`${url}/file/employee`, {
+      headers: { Authorization: `bearer ${token}` }
+    }).then(res => {
+      this.setState({
+        response: res.data
+      })
+    })
+  }
   render() {
     const { classes } = this.props;
     const preventDefault = event => event.preventDefault();
     return (
+      <EmpWrapper>
       <Container component="main" maxWidth="md">
         <MaterialTable
           icons={tableIcons}
@@ -58,6 +81,7 @@ class FileList extends React.Component {
           ]}
         />
       </Container>
+      </EmpWrapper>
     );
   }
 }
