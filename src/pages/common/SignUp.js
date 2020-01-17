@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Avatar,
   Button,
@@ -10,24 +10,24 @@ import {
   InputLabel,
   Select,
   withStyles
-} from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+} from "@material-ui/core";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import Login from './Login';
-import axios from 'axios';
+import Login from "./Login";
+import axios from "axios";
 
 const url = process.env.REACT_APP_BASE_URL;
 const styles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
       marginTop: theme.spacing(1.5)
     }
   },
@@ -39,7 +39,7 @@ const styles = theme => ({
     padding: `${theme.spacing(1.25)}px 0px`
   },
   button: {
-    textTransform: 'none'
+    textTransform: "none"
   }
 });
 
@@ -48,12 +48,13 @@ class Signup extends React.Component {
     super(props);
 
     this.state = {
-      name: '',
-      designation: '',
-      division: '',
-      tel: '',
-      email: '',
-      password: ''
+      name: "",
+      designation: "",
+      division: "",
+      tel: "",
+      email: "",
+      password: "",
+      role: "emp"
     };
   }
 
@@ -66,7 +67,15 @@ class Signup extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { name, designation, division, tel, email, password } = this.state;
+    const {
+      name,
+      designation,
+      division,
+      tel,
+      email,
+      password,
+      role
+    } = this.state;
 
     const user = {
       name,
@@ -74,7 +83,8 @@ class Signup extends React.Component {
       division,
       tel,
       email,
-      password
+      password,
+      role
     };
     axios.post(`${url}/users/signup`, user).then(res => {
       console.log(res.data);
@@ -126,6 +136,21 @@ class Signup extends React.Component {
                   <option value={1}>A</option>
                   <option value={2}>B</option>
                   <option value={3}>C</option>
+                </Select>
+                <InputLabel htmlFor="role">Your Role</InputLabel>
+                <Select
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  native
+                  id="role"
+                  name="role"
+                  onChange={this.handleInputChange}
+                  displayEmpty
+                >
+                  <option value="emp">Employee</option>
+                  <option value="qrg">QR Generator</option>
                 </Select>
 
                 <InputLabel htmlFor="division">Division</InputLabel>
@@ -188,12 +213,6 @@ class Signup extends React.Component {
                   Sign Up
                 </Button>
               </form>
-            </Grid>
-            <Grid item>
-              <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Login />
             </Grid>
           </Grid>
         </div>

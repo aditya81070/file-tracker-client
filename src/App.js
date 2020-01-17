@@ -24,6 +24,7 @@ function App() {
         <Route exact path="/qrg" component={GenerateQR} />
         <Route exact path="/qrg/generate-qr" component={GenerateQR} />
         <Route exact path="/qrg/files" component={ViewFilesQRG} />
+
         <Route path="/" component={Login} />
       </Switch>
     </BrowserRouter>
