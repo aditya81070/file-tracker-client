@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   CssBaseline,
@@ -7,18 +7,19 @@ import {
   Container,
   Grid,
   withStyles
-} from '@material-ui/core';
-import axios from 'axios';
+} from "@material-ui/core";
+import axios from "axios";
 
-import Step from './Step';
+import Step from "./Step";
+import AdminWrapper from "../../components/wrapper/AdminWrapper";
 
 const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
       marginTop: theme.spacing(1.5)
     }
   },
@@ -26,21 +27,21 @@ const styles = theme => ({
     padding: `${theme.spacing(1.25)}px 0px`
   },
   button: {
-    textTransform: 'none'
+    textTransform: "none"
   }
 });
 
 class AddProcess extends React.Component {
   state = {
-    pUniqueName: '',
-    title: '',
-    description: '',
+    name: "",
+    title: "",
+    description: "",
     steps: [
       {
-        title: '',
-        duration: '',
-        division: '',
-        task: ''
+        title: "",
+        duration: "",
+        division: "",
+        desc: ""
       }
     ]
   };
@@ -50,10 +51,10 @@ class AddProcess extends React.Component {
       steps: [
         ...prevState.steps,
         {
-          title: '',
-          duration: '',
-          division: '',
-          task: ''
+          title: "",
+          duration: "",
+          division: "",
+          task: ""
         }
       ]
     }));
@@ -83,102 +84,112 @@ class AddProcess extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const token = window.localStorage.getItem('token');
-    const { pUniqueName, title, description, steps } = this.state;
+    const token = window.localStorage.getItem("token");
+    const { name, title, description, steps } = this.state;
 
     const process = {
-      pUniqueName,
+      name,
       title,
       description,
       steps
     };
     console.log(process);
-    axios.post(`${url}`, token, process).then(res => {
-      console.log(res);
-    });
+    axios
+      .post(`${url}/processes`, process, {
+        headers: { Authorization: `bearer ${token}` }
+      })
+      .then(res => {
+        this.props.history.push("/admin");
+      })
+      .catch(err => {
+        console.error(err);
+        // alert('can not create process, try later')
+      });
   };
 
   render() {
     const { classes } = this.props;
     return (
-      <Container component="main" maxWidth="md">
-        <CssBaseline />
-        <div>
-          <Typography component="h1" variant="h5" className={classes.title}>
-            Create Process
-          </Typography>
-          <form onSubmit={this.handleSubmit} className={classes.form}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              size="small"
-              id="pUniqueName"
-              label="Unique Name"
-              name="pUniqueName"
-              value={this.state.pUniqueName}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              size="small"
-              id="title"
-              label="Title"
-              name="title"
-              value={this.state.title}
-              onChange={this.handleInputChange}
-            />
-            <TextField
-              variant="outlined"
-              multiline
-              rowsMax="5"
-              required
-              fullWidth
-              size="small"
-              name="description"
-              label="Description"
-              id="description"
-              value={this.state.description}
-              onChange={this.handleInputChange}
-            />
-            {this.state.steps.map((step, idx) => (
-              <Step
-                step={step}
-                index={idx}
-                key={idx}
-                handleInputChange={this.handelStepInputChange(idx)}
-                removeStep={this.removeStep(idx)}
+      <AdminWrapper>
+        <Container component="main" maxWidth="md">
+          <CssBaseline />
+          <div>
+            <Typography component="h1" variant="h5" className={classes.title}>
+              Create Process
+            </Typography>
+            <form onSubmit={this.handleSubmit} className={classes.form}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                size="small"
+                id="pUniqueName"
+                label="Unique Name"
+                name="name"
+                value={this.state.name}
+                onChange={this.handleInputChange}
               />
-            ))}
-            <Grid container spacing={4} direction="row" justify="center">
-              <Grid item md={3}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  onClick={this.addStep}
-                  className={classes.button}
-                >
-                  Add Step
-                </Button>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                size="small"
+                id="title"
+                label="Title"
+                name="title"
+                value={this.state.title}
+                onChange={this.handleInputChange}
+              />
+              <TextField
+                variant="outlined"
+                multiline
+                rowsMax="5"
+                required
+                fullWidth
+                size="small"
+                name="description"
+                label="Description"
+                id="description"
+                value={this.state.description}
+                onChange={this.handleInputChange}
+              />
+              {this.state.steps.map((step, idx) => (
+                <Step
+                  step={step}
+                  index={idx}
+                  key={idx}
+                  handleInputChange={this.handelStepInputChange(idx)}
+                  removeStep={this.removeStep(idx)}
+                />
+              ))}
+              <Grid container spacing={4} direction="row" justify="center">
+                <Grid item md={3}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    onClick={this.addStep}
+                    className={classes.button}
+                  >
+                    Add Step
+                  </Button>
+                </Grid>
+                <Grid item md={3}>
+                  <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Create Process
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item md={3}>
-                <Button
-                  fullWidth
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                >
-                  Create Process
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Container>
+            </form>
+          </div>
+        </Container>
+      </AdminWrapper>
     );
   }
 }

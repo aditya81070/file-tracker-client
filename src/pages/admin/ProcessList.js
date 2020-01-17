@@ -1,84 +1,53 @@
-import React from 'react';
-import MaterialTable from 'material-table';
+import React from "react";
 import {
   Container,
   withStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Button,
-  TextField
-} from '@material-ui/core';
-import axios from 'axios';
-import { tableIcons } from '../../components/TableIcons';
-import AdminWrapper from '../../components/wrapper/AdminWrapper';
+  Typography,
+  Grid
+} from "@material-ui/core";
+import axios from "axios";
+import AdminWrapper from "../../components/wrapper/AdminWrapper";
+import ProcessDetails from "./processDetails";
+import { Link } from "react-router-dom";
 
 const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
-      marginTop: theme.spacing(1.5)
-    },
-    textAlign: 'center'
-  },
-  title: {
-    padding: `${theme.spacing(1.25)}px 0px`
-  },
-  button: {
-    textTransform: 'none',
-    width: '100%',
-    margin: '10px auto',
-    color: 'white',
-    backgroundColor: theme.palette.primary.main,
-    border: 'none',
-    padding: '8px 10px',
-    cursor: 'pointer'
+  headingContainer: {
+    padding: theme.spacing(2),
+    margin: theme.spacing(2, 0)
   }
 });
-
 class ProcessList extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    processList: [],
+    expanded: false
+  };
 
-    this.state = {
-      response: [],
-      open: false,
-      id: '',
-      process: ''
-    };
-  }
-  handleClick = e => {
-    const id = e.target.value;
+  handleOpenProcess = name => (e, isExpanded) => {
     this.setState({
-      open: true
+      expanded: isExpanded ? name : false
     });
-    const token = window.localStorage.getItem('token');
+  };
+
+  handleProcessDelete = id => () => {
+    const token = window.localStorage.getItem("token");
     axios
-      .get(`${url}/processes/${id}`, {
+      .delete(`${url}/processes/${id}`, {
         headers: { Authorization: `bearer ${token}` }
       })
       .then(res => {
-        console.log(res.data);
-        this.setState({
-          process: res.data
-        });
-      });
+        console.log("process deleted");
+        this.setState(prev => ({
+          processList: prev.processList.filter(p => p._id !== id)
+        }));
+      })
+      .catch(err => console.log(`cannot delete process`, err));
   };
-
-  handleClose = e => {
-    this.setState({
-      open: false
-    });
-  };
-
-  handleEdit = e => {};
 
   componentDidMount() {
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem("token");
     axios
       .get(`${url}/processes`, {
         headers: { Authorization: `bearer ${token}` }
@@ -86,71 +55,48 @@ class ProcessList extends React.Component {
       .then(res => {
         console.log(res.data);
         this.setState({
-          response: res.data
+          processList: res.data
         });
-      });
+      })
+      .catch(err => console.log("cannot get process list", err));
   }
-
   render() {
+    const { processList } = this.state;
     const { classes } = this.props;
-    const process = this.state.process;
-
-    const data = this.state.response.map(res => ({
-        id: res._id,
-        title: res.title,
-        description: res.description,
-        name: res.name,
-        steps: res.steps
-      }));
     return (
       <AdminWrapper>
-        <Container component="main" maxWidth="md">
-          <MaterialTable
-            icons={tableIcons}
-            title="Process List"
-            columns={[
-              { title: 'Title',
-               field: 'title',
-               render: rowData => (
-                 <input
-                   type="button"
-                   onClick={this.handleClick}
-                   value={rowData.id}
-                   className={classes.button}
-                 />
-               )
-             },
-              {
-                title: 'Name',
-                field: 'name'
-              },
-              {
-                title: 'Status',
-                field: 'status'
-              }
-            ]}
-            data={data}
+        <Grid
+          container
+          justify="space-between"
+          direction="row"
+          alignItems="center"
+          className={classes.headingContainer}
+        >
+          <Grid item>
+            <Typography variant="h4" component="h1">
+              All Processes
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              component={Link}
+              to="/admin/new-process"
+              variant="contained"
+              color="primary"
+            >
+              Add new process
+            </Button>
+          </Grid>
+        </Grid>
+        {processList.map(process => (
+          <ProcessDetails
+            data={process}
+            key={process.name}
+            expanded={this.state.expanded}
+            onChange={this.handleOpenProcess(process.name)}
+            onDelete={this.handleProcessDelete(process._id)}
           />
-          <Dialog
-            open={this.state.open}
-            onClose={this.handleClose}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">{process.title}</DialogTitle>
-            <DialogContent>
-              {process.description}
-              
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color="primary">
-                Close
-              </Button>
-              <Button onClick={this.handleEdit} color="primary">
-                Edit
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Container>
+        ))}
       </AdminWrapper>
     );
   }

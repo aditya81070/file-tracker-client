@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   CssBaseline,
   TextField,
   Typography,
   Container
-} from '@material-ui/core';
-import ProcessMenu from './ProcessMenu';
+} from "@material-ui/core";
+import ProcessMenu from "./ProcessMenu";
 
 export default ({ handleInputChange, handleSubmit, post }) => {
   return (
@@ -22,20 +22,25 @@ export default ({ handleInputChange, handleSubmit, post }) => {
             margin="normal"
             required
             fullWidth
-            size="small"
-            id="fileName"
+            id="name"
             label="File Name"
-            name="fileName"
-            value={post.fileName}
+            name="name"
+            value={post.name}
             onChange={handleInputChange}
           />
 
           <ProcessMenu
-            value={post.pUniqueName}
+            value={post.processName}
             handleChange={handleInputChange}
           />
 
-          <Button fullWidth type="submit" variant="contained" color="primary">
+          <Button
+            fullWidth
+            type="submit"
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+          >
             Create File
           </Button>
         </form>

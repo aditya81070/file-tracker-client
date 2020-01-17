@@ -1,27 +1,30 @@
-import React from 'react';
-import QRCode from 'qrcode.react';
-import { withStyles } from '@material-ui/core';
-
-import AddFile from './AddFile';
-import QRGWrapper from '../../components/wrapper/QRGWrapper';
+import React from "react";
+import QRCode from "qrcode.react";
+import { withStyles } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import AddFile from "./AddFile";
+import QRGWrapper from "../../components/wrapper/QRGWrapper";
+import axios from "axios";
 
 const styles = theme => ({
   qr: {
-    textAlign: 'center'
+    textAlign: "center"
   },
   a: {
-    cursor: 'pointer'
+    cursor: "pointer"
   }
 });
 
+const url = process.env.REACT_APP_BASE_URL;
+
 const downloadQR = () => {
-  let canvas = document.getElementById('files');
+  let canvas = document.getElementById("files");
   const pngUrl = canvas
-    .toDataURL('image/png')
-    .replace('image/png', 'image/octet-stream');
-  let downloadLink = document.createElement('a');
+    .toDataURL("image/png")
+    .replace("image/png", "image/octet-stream");
+  let downloadLink = document.createElement("a");
   downloadLink.href = pngUrl;
-  downloadLink.download = 'files.png';
+  downloadLink.download = "files.png";
   document.body.appendChild(downloadLink);
   downloadLink.click();
   document.body.removeChild(downloadLink);
@@ -32,9 +35,10 @@ class QrGenerator extends React.Component {
     super(props);
 
     this.state = {
-      fileName: '',
-      pUniqueName: '',
-      isSubmitted: 0
+      name: "",
+      processName: "",
+      isSubmitted: false,
+      qrPath: ""
     };
   }
 
@@ -46,11 +50,25 @@ class QrGenerator extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({
-      isSubmitted: 1
-    });
-    const { fileName, pUniqueName } = this.state;
-    console.log('FileName' + fileName);
+    const { name, processName } = this.state;
+    const token = window.localStorage.getItem("token");
+    const fileData = {
+      name,
+      processName
+    };
+    axios
+      .post(`${url}/files`, fileData, {
+        headers: { Authorization: `bearer ${token}` }
+      })
+      .then(res => {
+        console.log("qr code generated");
+        const { qr } = res.data;
+        this.setState({
+          qrPath: qr,
+          isSubmitted: true
+        });
+      })
+      .catch(err => console.log("can not generate qr", err));
   };
 
   render() {
@@ -64,23 +82,25 @@ class QrGenerator extends React.Component {
             post={this.state}
           />
 
-          {this.state.isSubmitted === 1 ? (
+          {this.state.isSubmitted ? (
             <div className={classes.qr}>
-              <QRCode
-                id="files"
-                value={this.state.fileName}
-                size={290}
-                level={'H'}
-                includeMargin={true}
-              />
-              <br />
-              <a onClick={downloadQR} className={classes.a}>
-                Click here to Download
+              <a href={this.state.qrPath} download>
+                <img src={this.state.qrPath} alt="qr code" />
               </a>
+              <div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component="a"
+                  href={this.state.qrPath}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Download QR Code
+                </Button>
+              </div>
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
         </div>
       </QRGWrapper>
     );
