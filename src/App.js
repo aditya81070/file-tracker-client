@@ -9,6 +9,7 @@ import Signup from "./pages/common/SignUp";
 import AddProcess from "./pages/admin/AddProcess";
 import ProcessList from "./pages/admin/ProcessList";
 import UpdateProcess from "./pages/admin/updateProcess";
+import QrScanner from "./pages/employee/QRScanner";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
         <Route exact path="/qrg" component={GenerateQR} />
         <Route exact path="/qrg/generate-qr" component={GenerateQR} />
         <Route exact path="/qrg/files" component={ViewFilesQRG} />
-
+        <Route exact path="/emp/scanner" component={QrScanner} />
         <Route path="/" component={Login} />
       </Switch>
     </BrowserRouter>
