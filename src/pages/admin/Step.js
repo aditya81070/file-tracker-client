@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   TextField,
   Typography,
@@ -8,15 +8,15 @@ import {
   Grid,
   Button,
   withStyles
-} from '@material-ui/core';
-import Delete from '@material-ui/icons/Delete';
+} from "@material-ui/core";
+import Delete from "@material-ui/icons/Delete";
 
 const styles = theme => ({
   title: {
     padding: theme.spacing(1)
   },
   button: {
-    textTransform: 'none'
+    textTransform: "none"
   }
 });
 
@@ -95,9 +95,9 @@ function Step({ step, handleInputChange, index, removeStep, classes }) {
         <MenuItem value="" dense>
           Select a item
         </MenuItem>
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
+        <MenuItem value="counter1">Counter1</MenuItem>
+        <MenuItem value="counter2">Counter2</MenuItem>
+        <MenuItem value="counter3">Counter3</MenuItem>
       </Select>
 
       <TextField
@@ -107,10 +107,10 @@ function Step({ step, handleInputChange, index, removeStep, classes }) {
         required
         fullWidth
         size="small"
-        name="task"
-        label="Task"
+        name="desc"
+        label="Description"
         id={taskId}
-        value={step.task}
+        value={step.desc}
         onChange={handleInputChange}
       />
     </>
