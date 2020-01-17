@@ -39,23 +39,25 @@ function Step({ step, handleInputChange, index, removeStep, classes }) {
             Step {index + 1}
           </Typography>
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            endIcon={<Delete fontSize="small" />}
-            size="small"
-            onClick={removeStep}
-          >
-            <Typography
-              variant="button"
-              component="span"
-              className={classes.button}
+        {index !== 0 && (
+          <Grid item>
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<Delete fontSize="small" />}
+              size="small"
+              onClick={removeStep}
             >
-              Delete Step
-            </Typography>
-          </Button>
-        </Grid>
+              <Typography
+                variant="button"
+                component="span"
+                className={classes.button}
+              >
+                Delete Step
+              </Typography>
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <TextField
         variant="outlined"
