@@ -2,6 +2,9 @@ import React from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from "@material-ui/core";
+import axios from 'axios';
+
+const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
     select: {
@@ -10,6 +13,24 @@ const styles = theme => ({
 });
 
 class ProcessMenu extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            processes: []
+        }
+    }
+
+    componentDidMount() {
+        axios
+          .get(`${url}/qrg/process`)
+          .then(res => {
+            console.log(res.data);
+            this.setState({
+                processes: res.data
+            })
+          });
+      }
     render() {
         const { classes } = this.props;
         return (
@@ -28,9 +49,10 @@ class ProcessMenu extends React.Component {
                 <MenuItem value="" dense>
                     Select a process unique name
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {this.state.processes.map((process) => {
+                    return <MenuItem value={process.name}>{process.title}</MenuItem>
+                })}
+                
             </Select>
         )
     }
