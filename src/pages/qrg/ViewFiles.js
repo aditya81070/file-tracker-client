@@ -1,5 +1,5 @@
-import React from 'react';
-import MaterialTable from 'material-table';
+import React from "react";
+import MaterialTable from "material-table";
 import {
   Container,
   withStyles,
@@ -9,43 +9,35 @@ import {
   DialogTitle,
   Button,
   TextField
-} from '@material-ui/core';
-import { tableIcons } from '../../components/TableIcons';
-import ProcessMenu from './ProcessMenu';
-import QRGWrapper from '../../components/wrapper/QRGWrapper';
+} from "@material-ui/core";
+import { tableIcons } from "../../components/TableIcons";
+import ProcessMenu from "./ProcessMenu";
+import QRGWrapper from "../../components/wrapper/QRGWrapper";
+import axios from "axios";
+const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
       marginTop: theme.spacing(1.5)
     },
-    textAlign: 'center'
+    textAlign: "center"
   },
   title: {
     padding: `${theme.spacing(1.25)}px 0px`
   },
   button: {
-    textTransform: 'none',
-    width: '100%',
-    margin: '10px auto',
-    color: 'white',
-    backgroundColor: theme.palette.primary.main,
-    border: 'none',
-    padding: '8px 10px',
-    cursor: 'pointer'
+    textTransform: "none"
   }
 });
 
 class ViewFiles extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      open: false
-    };
-  }
+  state = {
+    files: [],
+    processes: []
+  };
   handleClick = e => {
     console.log(e.target.value);
     this.setState({
@@ -60,10 +52,47 @@ class ViewFiles extends React.Component {
   };
 
   handleEdit = e => {};
-
+  componentDidMount() {
+    const token = window.localStorage.getItem("token");
+    axios.get(`${url}/qrg/process`).then(res => {
+      console.log(res.data);
+      this.setState({
+        processes: res.data
+      });
+    });
+    axios
+      .get(`${url}/files`, {
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          files: res.data
+        });
+      })
+      .catch(err => console.log("can not get files", err));
+  }
   render() {
     const { classes } = this.props;
+    const { files, processes } = this.state;
 
+    const data = files.map(file => {
+      const { name, processName, processTitle, steps, qr, _id: id } = file;
+      return {
+        name,
+        processName,
+        processTitle,
+        division: steps[0].division,
+        qr,
+        id
+      };
+    });
+    const processData = processes.reduce((acc, cur) => {
+      acc[cur.name] = cur.title;
+      return acc;
+    }, {});
     return (
       <QRGWrapper>
         <Container component="main" maxWidth="md">
@@ -71,64 +100,88 @@ class ViewFiles extends React.Component {
             icons={tableIcons}
             title="File List"
             columns={[
-              { title: 'File Name', field: 'fName' },
-              { title: 'Process Name', field: 'pName' },
+              { title: "File Name", field: "name", editable: "onUpdate" },
               {
-                title: 'Edit',
-                field: 'edit',
-                render: rowData => (
-                  <button
-                    onClick={this.handleClick}
-                    value="file1"
-                    className={classes.button}
-                  >
-                    UPDATE
-                  </button>
-                )
+                title: "Process Name",
+                field: "processName",
+                editable: "onUpdate",
+                lookup: processData
               },
+              { title: "Division", field: "division", editable: "never" },
               {
-                title: 'Delete',
-                field: 'delete',
+                title: "Download QR Code",
+                field: "qr",
+                editable: "never",
                 render: rowData => (
-                  <button
-                    onClick={this.handleClick}
-                    value="file1"
+                  <Button
+                    component="a"
+                    href={rowData.qr}
+                    download
+                    variant="text"
+                    target="_blank"
+                    download
                     className={classes.button}
                   >
-                    DELETE
-                  </button>
+                    Download
+                  </Button>
                 )
               }
             ]}
-            data={[{ fName: 'File1', pName: 'Ten' }]}
+            data={data}
+            editable={{
+              onRowUpdate: (newData, oldData) => {
+                const token = window.localStorage.getItem("token");
+                return new Promise((resolve, reject) => {
+                  axios
+                    .put(
+                      `${url}/files/${newData.id}`,
+                      {
+                        name: newData.name,
+                        processName: newData.processName
+                      },
+                      {
+                        headers: {
+                          Authorization: `bearer ${token}`
+                        }
+                      }
+                    )
+                    .then(res => {
+                      console.log("file updated");
+                      window.location.reload();
+                      resolve();
+                    })
+                    .catch(err => {
+                      console.log("can not update file");
+                      reject();
+                    });
+                });
+              },
+              onRowDelete: oldData => {
+                const token = window.localStorage.getItem("token");
+                return new Promise((resolve, reject) => {
+                  axios
+                    .delete(`${url}/files/${oldData.id}`, {
+                      headers: {
+                        Authorization: `bearer ${token}`
+                      }
+                    })
+                    .then(res => {
+                      console.log("deleted file");
+                      this.setState(prev => ({
+                        files: prev.files.filter(
+                          file => file._id !== oldData.id
+                        )
+                      }));
+                      resolve();
+                    })
+                    .catch(err => {
+                      console.log(" can not delete file", err);
+                      reject();
+                    });
+                });
+              }
+            }}
           />
-          <Dialog
-            open={this.state.open}
-            onClose={this.handleClose}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">Edit File</DialogTitle>
-            <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="fName"
-                label="File Name"
-                type="fName"
-                onChange={this.handleInputChange}
-                fullWidth
-              />
-              <ProcessMenu />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color="primary">
-                Close
-              </Button>
-              <Button onClick={this.handleEdit} color="primary">
-                Edit
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Container>
       </QRGWrapper>
     );
