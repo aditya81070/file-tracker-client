@@ -12,8 +12,7 @@ import {
   withStyles
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
-import Login from "./Login";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const url = process.env.REACT_APP_BASE_URL;
@@ -87,7 +86,7 @@ class Signup extends React.Component {
       role
     };
     axios.post(`${url}/users/signup`, user).then(res => {
-      console.log(res.data);
+      this.props.history.push("/login");
     });
   };
   render() {
@@ -96,14 +95,32 @@ class Signup extends React.Component {
       <Container component="main" maxWidth="lg">
         <CssBaseline />
         <div className={classes.paper}>
-          <Grid container>
-            <Grid item sm>
-              <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign Up
-              </Typography>
+          <Grid container direction="column">
+            <Grid item>
+              <Grid
+                container
+                justify="space-between"
+                direction="row"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Grid container alignItems="center">
+                    <Avatar className={classes.avatar}>
+                      <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                      Sign Up
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" component="p">
+                    Already a user? <Link to="/login">Log in here</Link>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
               <form
                 noValidate
                 onSubmit={this.handleSubmit}
@@ -111,7 +128,6 @@ class Signup extends React.Component {
               >
                 <TextField
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   id="name"
@@ -121,26 +137,19 @@ class Signup extends React.Component {
                   autoFocus
                   onChange={this.handleInputChange}
                 />
-                <InputLabel htmlFor="designation">Designation</InputLabel>
-                <Select
+                <TextField
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
-                  native
                   id="designation"
+                  label="Designation"
                   name="designation"
                   onChange={this.handleInputChange}
-                >
-                  <option value="" />
-                  <option value={1}>A</option>
-                  <option value={2}>B</option>
-                  <option value={3}>C</option>
-                </Select>
+                />
+
                 <InputLabel htmlFor="role">Your Role</InputLabel>
                 <Select
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   native
@@ -156,7 +165,6 @@ class Signup extends React.Component {
                 <InputLabel htmlFor="division">Division</InputLabel>
                 <Select
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   native
@@ -164,15 +172,14 @@ class Signup extends React.Component {
                   name="division"
                   onChange={this.handleInputChange}
                 >
-                  <option value="" />
-                  <option value={1}>A</option>
-                  <option value={2}>B</option>
-                  <option value={3}>C</option>
+                  <option value="">select division</option>
+                  <option value="counter1">counter1</option>
+                  <option value="counter2">counter2</option>
+                  <option value="counter3">counter3</option>
                 </Select>
 
                 <TextField
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   id="tel"
@@ -183,7 +190,6 @@ class Signup extends React.Component {
                 />
                 <TextField
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   id="email"
@@ -195,7 +201,6 @@ class Signup extends React.Component {
                 />
                 <TextField
                   variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   name="password"

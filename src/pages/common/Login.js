@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   CssBaseline,
   TextField,
   Typography,
   Container
-} from '@material-ui/core';
-import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+} from "@material-ui/core";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -15,10 +16,10 @@ class LogIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       redirect: false,
-      redirectPath: ''
+      redirectPath: ""
     };
   }
 
@@ -43,13 +44,13 @@ class LogIn extends React.Component {
       console.log(res);
       const token = res.data.token;
       const role = res.data.role;
-      window.localStorage.setItem('token', token);
-      if (role === 'admin') {
-        this.setState({ redirect: true, redirectPath: '/admin' });
-      } else if (role === 'emp') {
-        this.setState({ redirect: true, redirectPath: '/emp' });
-      } else if (role === 'qrg') {
-        this.setState({ redirect: true, redirectPath: '/qrg' });
+      window.localStorage.setItem("token", token);
+      if (role === "admin") {
+        this.setState({ redirect: true, redirectPath: "/admin" });
+      } else if (role === "emp") {
+        this.setState({ redirect: true, redirectPath: "/emp" });
+      } else if (role === "qrg") {
+        this.setState({ redirect: true, redirectPath: "/qrg" });
       }
     });
   };
@@ -98,6 +99,9 @@ class LogIn extends React.Component {
                 Log In
               </Button>
             </form>
+            <Typography variant="h6" component="p">
+              Not a user? <Link to="/signup">Signup here</Link>
+            </Typography>
           </div>
         </Container>
       );

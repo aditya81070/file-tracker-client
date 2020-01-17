@@ -32,6 +32,7 @@ export default class QrScanner extends Component {
         .then(res => {
           console.log("filename send");
           console.log(res);
+          this.props.history.push("/emp");
         })
         .catch(err => {
           console.log("can not scan qr");
