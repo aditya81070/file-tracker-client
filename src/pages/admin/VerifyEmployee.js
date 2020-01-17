@@ -103,7 +103,8 @@ class VerifyEmployee extends React.Component {
       division: res.division,
       contact: res.contact,
       email: res.email,
-      verify: res.isVerified
+      verify: res.isVerified,
+      role: res.role
     }));
     return (
       <AdminWrapper>
@@ -115,15 +116,13 @@ class VerifyEmployee extends React.Component {
               { title: "Name", field: "name" },
               {
                 title: "Designation",
-                field: "designation",
-                lookup: { 34: "İstanbul", a: "Şanlıurfa" }
+                field: "designation"
               },
               {
                 title: "Division",
-                field: "division",
-                lookup: { sample: "İstanbul", 63: "Şanlıurfa" }
+                field: "division"
               },
-              { title: "Contact", field: "contact", type: "numeric" },
+              { title: "Contact", field: "contact" },
               { title: "Email", field: "email" },
               {
                 title: "Verify",

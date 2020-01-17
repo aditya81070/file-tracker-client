@@ -133,20 +133,30 @@ export default function AdminWrapper(props) {
         <Divider />
         <Divider />
         <List>
-          <ListItem button key="Home">
-            <Link to="/admin">Home</Link>
+          <ListItem button key="Home" component={Link} to="/admin">
+            Home
           </ListItem>
-          <ListItem button key="trackFiles">
-            <Link to="/admin/file-list">Files List</Link>
+          <ListItem
+            button
+            component={Link}
+            to="/admin/file-list"
+            key="trackFiles"
+          >
+            Files List
           </ListItem>
-          <ListItem button key="EmpList">
-            <Link to="/admin/employee">Employee List</Link>
+          <ListItem button component={Link} to="/admin/employee" key="EmpList">
+            Employee List
           </ListItem>
-          <ListItem button key="UnverifiedEmp">
-            <Link to="/admin/employee/verify">Verify Employees</Link>
+          <ListItem
+            button
+            component={Link}
+            to="/admin/employee/verify"
+            key="UnverifiedEmp"
+          >
+            Verify Employees
           </ListItem>
-          <ListItem button key="logout">
-            <Link variant="body2">Logout</Link>
+          <ListItem onClick={() => console.log("logout")} button key="logout">
+            Logout
           </ListItem>
         </List>
       </Drawer>

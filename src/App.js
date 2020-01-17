@@ -24,6 +24,8 @@ function App() {
         <Route exact path="/admin/employee/verify" component={VerifyEmployee} />
         <Route exact path="/admin/process-list" component={ProcessList} />
         <Route exact path="/admin/file-list" component={AdminFileList} />
+        <Route exact path="/admin/new-process" component={AddProcess} />
+
         <Route
           exact
           path="/admin/process/update/:pid"

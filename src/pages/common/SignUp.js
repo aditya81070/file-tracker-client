@@ -70,7 +70,7 @@ class Signup extends React.Component {
       name,
       designation,
       division,
-      tel,
+      tel: contact,
       email,
       password,
       role
@@ -80,7 +80,7 @@ class Signup extends React.Component {
       name,
       designation,
       division,
-      tel,
+      contact,
       email,
       password,
       role

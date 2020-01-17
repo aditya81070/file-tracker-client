@@ -4,13 +4,21 @@ import {
   CssBaseline,
   TextField,
   Typography,
-  Container
+  Container,
+  withStyles
 } from "@material-ui/core";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const url = process.env.REACT_APP_BASE_URL;
+
+const styles = theme => ({
+  container: {
+    width: "100vh",
+    maxWidth: "100vh"
+  }
+});
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -56,53 +64,47 @@ class LogIn extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     if (!this.state.redirect) {
       return (
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="sm" className={classes.container}>
           <CssBaseline />
-          <div>
-            <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5">
+            Log In
+          </Typography>
+          <form noValidate onSubmit={this.handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={this.handleInputChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={this.handleInputChange}
+            />
+            <Button type="submit" fullWidth variant="contained" color="primary">
               Log In
-            </Typography>
-            <form noValidate onSubmit={this.handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                type="email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                onChange={this.handleInputChange}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={this.handleInputChange}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Log In
-              </Button>
-            </form>
-            <Typography variant="h6" component="p">
-              Not a user? <Link to="/signup">Signup here</Link>
-            </Typography>
-          </div>
+            </Button>
+          </form>
+          <Typography variant="h6" component="p">
+            Not a user? <Link to="/signup">Signup here</Link>
+          </Typography>
         </Container>
       );
     } else {
@@ -111,4 +113,4 @@ class LogIn extends React.Component {
   }
 }
 
-export default LogIn;
+export default withStyles(styles)(LogIn);

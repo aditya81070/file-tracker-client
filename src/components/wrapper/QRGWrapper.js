@@ -135,14 +135,14 @@ export default function QRGWrapper(props) {
 
         <Divider />
         <List>
-          <ListItem button key="GenerateQr">
-            <Link to="/qrg">Generate QR</Link>
+          <ListItem button component={Link} to="/qrg" key="GenerateQr">
+            Generate QR
           </ListItem>
-          <ListItem button key="viewFiles">
-            <Link to="/qrg/files">View Files</Link>
+          <ListItem button component={Link} to="/qrg/files" key="viewFiles">
+            View Files
           </ListItem>
-          <ListItem button key="logout">
-            <Link variant="body2">Logout</Link>
+          <ListItem button component={Link} to="/logout" key="logout">
+            Logout
           </ListItem>
         </List>
       </Drawer>
