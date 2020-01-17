@@ -4,6 +4,7 @@ import { Container, Link, withStyles, Typography } from "@material-ui/core";
 import { tableIcons } from "../../components/TableIcons";
 import axios from "axios";
 import EmpWrapper from "../../components/wrapper/EmpWrapper";
+import Button from "@material-ui/core/Button";
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -35,9 +36,30 @@ class FileList extends React.Component {
     super(props);
 
     this.state = {
-      response: []
+      response: [],
+      updateFiles: []
     };
   }
+
+  handleChecked = e => {
+    let userId;
+    if (e.target.checked) {
+      userId = e.target.value;
+    } else {
+      const index = this.state.updateFiles.indexOf(e.target.value);
+      if (index > -1) {
+        this.state.updateFiles.splice(index, 1);
+      }
+    }
+
+    if (typeof userId === "undefined") {
+    } else {
+      this.setState(prevState => ({
+        updateFiles: [...prevState.updateFiles, userId]
+      }));
+    }
+  };
+
   componentDidMount() {
     const token = window.localStorage.getItem("token");
 
@@ -53,17 +75,48 @@ class FileList extends React.Component {
       })
       .catch(err => console.log(`can not display files`, err));
   }
+
+  handleUpdateFiles = e => {
+    e.preventDefault();
+    const fileIds = this.state.updateFiles;
+    const token = window.localStorage.getItem("token");
+    console.log(token);
+    if (fileIds.length === 1) {
+      axios
+        .put(`${url}/file/employee/${fileIds[0]}`, " ", {
+          headers: { Authorization: `bearer ${token}` }
+        })
+        .then(res => {
+          this.setState(prev => ({
+            response: prev.response.filter(file => file._id !== fileIds[0])
+          }));
+        })
+        .catch(err => console.log("can not update status"));
+    } else {
+      axios
+        .put(`${url}/file/employee`, fileIds, {
+          headers: { Authorization: `bearer ${token}` }
+        })
+        .then(res => {
+          console.log(res.data);
+          window.location.reload();
+        })
+        .catch(err => console.log("can not update status"));
+    }
+  };
+
   render() {
     const { classes } = this.props;
-    const preventDefault = event => event.preventDefault();
     const data = this.state.response.map(file => {
       const {
         name,
+        _id: id,
         processTitle,
         step: { title, desc, deadline }
       } = file;
       return {
         name,
+        id,
         processTitle,
         title,
         desc,
@@ -113,6 +166,14 @@ class FileList extends React.Component {
               </div>
             )}
           />
+          <Button
+            variant="contained"
+            color="primary"
+            // className={classes.button}
+            onClick={this.handleUpdateFiles}
+          >
+            Update Status
+          </Button>
         </Container>
       </EmpWrapper>
     );
