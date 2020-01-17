@@ -135,13 +135,13 @@ export default function EmpWrapper(props) {
         <Divider />
         <List>
           <ListItem button key="GenerateQr">
-            <Link to="/scanQR">Scan QR</Link>
+            <Link to="/emp/scanner">Scan QR</Link>
           </ListItem>
           <ListItem button key="viewFiles">
-            <Link to="/viewFile">View Files</Link>
+            <Link to="/emp">View Files</Link>
           </ListItem>
           <ListItem button key="logout">
-            <Link variant="body2">Logout</Link>
+            <Link to="/logout" variant="body2">Logout</Link>
           </ListItem>
         </List>
       </Drawer>

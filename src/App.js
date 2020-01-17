@@ -9,8 +9,9 @@ import Signup from "./pages/common/SignUp";
 import AddProcess from "./pages/admin/AddProcess";
 import ProcessList from "./pages/admin/ProcessList";
 import UpdateProcess from "./pages/admin/updateProcess";
+import AdminFileList from "./pages/admin/FileList";
 import QrScanner from "./pages/employee/QRScanner";
-import FileList from "./pages/employee/FileList";
+import EmpFileList from "./pages/employee/FileList";
 
 function App() {
   return (
@@ -21,13 +22,13 @@ function App() {
         <Route exact path="/admin" component={ProcessList} />
         <Route exact path="/admin/employee" component={EmployeeList} />
         <Route exact path="/admin/employee/verify" component={VerifyEmployee} />
-        <Route exact path="/admin/new-process" component={AddProcess} />
-        <Route path="/admin/process/update/:pid" component={UpdateProcess} />
+        <Route exact path="/admin/process-list" component={ProcessList} />
+        <Route exact path="/admin/file-list" component={AdminFileList} />
         <Route exact path="/qrg" component={GenerateQR} />
         <Route exact path="/qrg/generate-qr" component={GenerateQR} />
         <Route exact path="/qrg/files" component={ViewFilesQRG} />
         <Route exact path="/emp/scanner" component={QrScanner} />
-        <Route exact path="/emp" component={FileList} />
+        <Route exact path="/emp" component={EmpFileList} />
         <Route path="/" component={Login} />
       </Switch>
     </BrowserRouter>

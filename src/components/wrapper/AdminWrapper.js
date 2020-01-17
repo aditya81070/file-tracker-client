@@ -133,6 +133,12 @@ export default function AdminWrapper(props) {
         <Divider />
         <Divider />
         <List>
+          <ListItem button key="Home">
+            <Link to="/admin">Home</Link>
+          </ListItem>
+          <ListItem button key="trackFiles">
+            <Link to="/admin/employee/verify">Files List</Link>
+          </ListItem>
           <ListItem button key="EmpList">
             <Link to="/admin/employee">Employee List</Link>
           </ListItem>

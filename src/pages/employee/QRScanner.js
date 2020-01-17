@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import QrReader from "react-qr-reader";
 import axios from "axios";
+import EmpWrapper from '../../components/wrapper/EmpWrapper';
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -44,15 +45,17 @@ export default class QrScanner extends Component {
   };
   render() {
     return (
-      <div>
-        {this.state.show && (
-          <QrReader
-            onError={this.handleError}
-            onScan={this.handleScan}
-            style={{ width: "50%" }}
-          />
-        )}
-      </div>
+      <EmpWrapper>
+        <div>
+          {this.state.show && (
+            <QrReader
+              onError={this.handleError}
+              onScan={this.handleScan}
+              style={{ width: "50%" }}
+            />
+          )}
+        </div>
+      </EmpWrapper>
     );
   }
 }
