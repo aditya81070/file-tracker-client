@@ -2,13 +2,17 @@ import React from "react";
 import QRCode from "qrcode.react";
 import { withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import AddFile from "./AddFile";
 import QRGWrapper from "../../components/wrapper/QRGWrapper";
 import axios from "axios";
 
 const styles = theme => ({
   qr: {
-    textAlign: "center"
+    textAlign: "center",
+    margin: theme.spacing(2),
+    border: `1px solid ${theme.palette.primary.light}`,
+    padding: theme.spacing(2, 0)
   },
   a: {
     cursor: "pointer"
@@ -16,19 +20,6 @@ const styles = theme => ({
 });
 
 const url = process.env.REACT_APP_BASE_URL;
-
-const downloadQR = () => {
-  let canvas = document.getElementById("files");
-  const pngUrl = canvas
-    .toDataURL("image/png")
-    .replace("image/png", "image/octet-stream");
-  let downloadLink = document.createElement("a");
-  downloadLink.href = pngUrl;
-  downloadLink.download = "files.png";
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-};
 
 class QrGenerator extends React.Component {
   constructor(props) {
@@ -38,7 +29,8 @@ class QrGenerator extends React.Component {
       name: "",
       processName: "",
       isSubmitted: false,
-      qrPath: ""
+      qrPath: "",
+      nextDivision: ""
     };
   }
 
@@ -62,10 +54,12 @@ class QrGenerator extends React.Component {
       })
       .then(res => {
         console.log("qr code generated");
-        const { qr } = res.data;
+        const { qr, nextDivision } = res.data;
         this.setState({
           qrPath: qr,
-          isSubmitted: true
+          isSubmitted: true,
+          name: "",
+          nextDivision
         });
       })
       .catch(err => console.log("can not generate qr", err));
@@ -84,6 +78,9 @@ class QrGenerator extends React.Component {
 
           {this.state.isSubmitted ? (
             <div className={classes.qr}>
+              <Typography variant="h5" component="p">
+                Next Step: {this.state.nextDivision}
+              </Typography>
               <a href={this.state.qrPath} download>
                 <img src={this.state.qrPath} alt="qr code" />
               </a>

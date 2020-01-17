@@ -4,19 +4,28 @@ import {
   CssBaseline,
   TextField,
   Typography,
-  Container
+  Container,
+  makeStyles
 } from "@material-ui/core";
 import ProcessMenu from "./ProcessMenu";
 
+const useStyles = makeStyles(theme => ({
+  form: {
+    "& > div": {
+      margin: theme.spacing(2, 0)
+    }
+  }
+}));
 export default ({ handleInputChange, handleSubmit, post }) => {
+  const classes = useStyles();
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
       <div>
         <Typography component="h1" variant="h5">
-          Create File
+          Generate QR Code
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={classes.form}>
           <TextField
             variant="outlined"
             margin="normal"

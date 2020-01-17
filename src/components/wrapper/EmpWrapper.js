@@ -108,7 +108,7 @@ export default function EmpWrapper(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Dashboard
+            Employee Dashboard
           </Typography>
         </Toolbar>
       </AppBar>

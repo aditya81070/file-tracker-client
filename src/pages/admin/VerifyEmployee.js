@@ -1,28 +1,28 @@
-import React from 'react';
-import MaterialTable from 'material-table';
-import { Button, Container, withStyles } from '@material-ui/core';
-import axios from 'axios';
-import { tableIcons } from '../../components/TableIcons';
-import AdminWrapper from '../../components/wrapper/AdminWrapper';
+import React from "react";
+import MaterialTable from "material-table";
+import { Button, Container, withStyles } from "@material-ui/core";
+import axios from "axios";
+import { tableIcons } from "../../components/TableIcons";
+import AdminWrapper from "../../components/wrapper/AdminWrapper";
 
 const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
+    display: "flex",
+    flexDirection: "column",
+    "& > *": {
       marginTop: theme.spacing(1.5)
     },
-    textAlign: 'center'
+    textAlign: "center"
   },
   title: {
     padding: `${theme.spacing(1.25)}px 0px`
   },
   button: {
-    textTransform: 'none',
-    width: '20%',
-    margin: '10px auto'
+    textTransform: "none",
+    width: "20%",
+    margin: "10px auto"
   }
 });
 
@@ -47,7 +47,7 @@ class VerifyEmployee extends React.Component {
       }
     }
 
-    if (typeof userId === 'undefined') {
+    if (typeof userId === "undefined") {
     } else {
       this.setState(prevState => ({
         verifyUsers: [...prevState.verifyUsers, userId]
@@ -55,18 +55,19 @@ class VerifyEmployee extends React.Component {
     }
   };
 
-  handleSubmit = e => {
+  handleVerifyEmployee = e => {
     e.preventDefault();
     const userIds = this.state.verifyUsers;
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem("token");
     console.log(token);
     if (userIds.length === 1) {
       axios
-        .post(`${url}/employee/verify/${userIds[0]}`, ' ', {
+        .post(`${url}/employee/verify/${userIds[0]}`, " ", {
           headers: { Authorization: `bearer ${token}` }
         })
         .then(res => {
           console.log(res.data);
+          window.location.reload();
         });
     } else {
       axios
@@ -75,12 +76,13 @@ class VerifyEmployee extends React.Component {
         })
         .then(res => {
           console.log(res.data);
+          window.location.reload();
         });
     }
   };
 
   componentDidMount() {
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem("token");
     axios
       .get(`${url}/employee/verify`, {
         headers: { Authorization: `bearer ${token}` }
@@ -106,48 +108,46 @@ class VerifyEmployee extends React.Component {
     return (
       <AdminWrapper>
         <Container component="main" maxWidth="md">
-          <form onSubmit={this.handleSubmit} className={classes.form}>
-            <MaterialTable
-              icons={tableIcons}
-              title="Employee List"
-              columns={[
-                { title: 'Name', field: 'name' },
-                {
-                  title: 'Designation',
-                  field: 'designation',
-                  lookup: { 34: 'İstanbul', a: 'Şanlıurfa' }
-                },
-                {
-                  title: 'Division',
-                  field: 'division',
-                  lookup: { sample: 'İstanbul', 63: 'Şanlıurfa' }
-                },
-                { title: 'Contact', field: 'contact', type: 'numeric' },
-                { title: 'Email', field: 'email' },
-                {
-                  title: 'Verify',
-                  field: 'checkbox',
-                  render: rowData => (
-                    <input
-                      type="checkbox"
-                      onChange={this.handleChecked}
-                      value={rowData.id}
-                    />
-                  )
-                }
-              ]}
-              data={data}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Verify
-            </Button>
-          </form>
+          <MaterialTable
+            icons={tableIcons}
+            title="Employee List"
+            columns={[
+              { title: "Name", field: "name" },
+              {
+                title: "Designation",
+                field: "designation",
+                lookup: { 34: "İstanbul", a: "Şanlıurfa" }
+              },
+              {
+                title: "Division",
+                field: "division",
+                lookup: { sample: "İstanbul", 63: "Şanlıurfa" }
+              },
+              { title: "Contact", field: "contact", type: "numeric" },
+              { title: "Email", field: "email" },
+              {
+                title: "Verify",
+                field: "checkbox",
+                render: rowData => (
+                  <input
+                    type="checkbox"
+                    onChange={this.handleChecked}
+                    value={rowData.id}
+                  />
+                )
+              }
+            ]}
+            data={data}
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.handleVerifyEmployee}
+          >
+            Verify
+          </Button>
         </Container>
       </AdminWrapper>
     );

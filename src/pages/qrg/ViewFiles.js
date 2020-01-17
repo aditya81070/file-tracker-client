@@ -1,17 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
-import {
-  Container,
-  withStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  TextField
-} from "@material-ui/core";
+import { Container, withStyles, Button } from "@material-ui/core";
 import { tableIcons } from "../../components/TableIcons";
-import ProcessMenu from "./ProcessMenu";
 import QRGWrapper from "../../components/wrapper/QRGWrapper";
 import axios from "axios";
 const url = process.env.REACT_APP_BASE_URL;
