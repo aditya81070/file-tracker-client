@@ -95,9 +95,9 @@ function Step({ step, handleInputChange, index, removeStep, classes }) {
         <MenuItem value="" dense>
           Select a item
         </MenuItem>
-        <MenuItem value="counter1">Counter1</MenuItem>
-        <MenuItem value="counter2">Counter2</MenuItem>
-        <MenuItem value="counter3">Counter3</MenuItem>
+        <MenuItem value="Division1">Division1</MenuItem>
+        <MenuItem value="Division2">Division2</MenuItem>
+        <MenuItem value="Division3">Division3</MenuItem>
       </Select>
 
       <TextField

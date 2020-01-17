@@ -173,9 +173,9 @@ class Signup extends React.Component {
                   onChange={this.handleInputChange}
                 >
                   <option value="">select division</option>
-                  <option value="counter1">counter1</option>
-                  <option value="counter2">counter2</option>
-                  <option value="counter3">counter3</option>
+                  <option value="Division1">Division1</option>
+                  <option value="Division2">Division2</option>
+                  <option value="Division3">Division3</option>
                 </Select>
 
                 <TextField
