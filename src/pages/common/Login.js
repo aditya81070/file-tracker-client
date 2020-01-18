@@ -15,8 +15,12 @@ const url = process.env.REACT_APP_BASE_URL;
 
 const styles = theme => ({
   container: {
-    width: "100vh",
-    maxWidth: "100vh"
+    height: "100vh",
+    maxHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItem: "center"
   }
 });
 

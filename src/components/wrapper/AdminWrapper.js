@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -80,6 +80,7 @@ export default function AdminWrapper(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const history = useHistory();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -88,6 +89,10 @@ export default function AdminWrapper(props) {
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("token");
+    history.push("/login");
+  };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -155,7 +160,7 @@ export default function AdminWrapper(props) {
           >
             Verify Employees
           </ListItem>
-          <ListItem onClick={() => console.log("logout")} button key="logout">
+          <ListItem onClick={handleLogout} button key="logout">
             Logout
           </ListItem>
         </List>

@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -79,6 +79,7 @@ const useStyles = makeStyles(theme => ({
 export default function QRGWrapper(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -87,6 +88,11 @@ export default function QRGWrapper(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("token");
+    history.push("/login");
   };
 
   return (
@@ -141,7 +147,7 @@ export default function QRGWrapper(props) {
           <ListItem button component={Link} to="/qrg/files" key="viewFiles">
             View Files
           </ListItem>
-          <ListItem button component={Link} to="/logout" key="logout">
+          <ListItem button onClick={handleLogout} key="logout">
             Logout
           </ListItem>
         </List>

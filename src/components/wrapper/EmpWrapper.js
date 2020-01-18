@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -79,9 +79,15 @@ const useStyles = makeStyles(theme => ({
 export default function EmpWrapper(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("token");
+    history.push("/login");
   };
 
   const handleDrawerClose = () => {
@@ -140,7 +146,7 @@ export default function EmpWrapper(props) {
           <ListItem button component={Link} to="/emp" key="viewFiles">
             View Files
           </ListItem>
-          <ListItem component={Link} to="/logout" button key="logout">
+          <ListItem onClick={handleLogout} button key="logout">
             Logout
           </ListItem>
         </List>
