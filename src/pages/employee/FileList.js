@@ -22,8 +22,7 @@ const styles = theme => ({
   },
   button: {
     textTransform: "none",
-    width: "20%",
-    margin: "10px auto"
+    margin: theme.spacing(2, 0)
   },
   fileDetail: {
     padding: theme.spacing(3),
@@ -112,7 +111,8 @@ class FileList extends React.Component {
         name,
         _id: id,
         processTitle,
-        step: { title, desc, deadline }
+        step: { title, desc, deadline },
+        nextStep
       } = file;
       return {
         name,
@@ -120,7 +120,8 @@ class FileList extends React.Component {
         processTitle,
         title,
         desc,
-        deadline
+        deadline,
+        nextStep
       };
     });
     return (
@@ -141,6 +142,10 @@ class FileList extends React.Component {
               {
                 title: "Deadline",
                 field: "deadline"
+              },
+              {
+                title: "Next Step",
+                field: "nextStep"
               },
               {
                 title: "Completed",
@@ -169,7 +174,7 @@ class FileList extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            // className={classes.button}
+            className={classes.button}
             onClick={this.handleUpdateFiles}
           >
             Update Status
